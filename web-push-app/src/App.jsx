@@ -11,7 +11,7 @@ function App() {
     localStorage.removeItem("token");
     setToken(null);
   };
-
+``;
   return (
     <div className="app">
       {!token ? (
