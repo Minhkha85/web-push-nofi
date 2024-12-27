@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../auth/api";
 
 function PushNotification({ token }) {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -108,3 +109,4 @@ function PushNotification({ token }) {
 }
 
 export default PushNotification;
+
