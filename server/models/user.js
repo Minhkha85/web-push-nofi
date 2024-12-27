@@ -1,26 +1,40 @@
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
-  });
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
+const bcrypt = require('bcryptjs');
 
-  User.associate = (models) => {
-    User.hasMany(models.PushSubscription);
-    User.hasMany(models.Notification, { as: 'SentNotifications', foreignKey: 'senderId' });
-    User.hasMany(models.Notification, { as: 'ReceivedNotifications', foreignKey: 'receiverId' });
-  };
+class User extends Model {
+  static async hashPassword(password) {
+    return await bcrypt.hash(password, 10);
+  }
 
-  return User;
-}; 
+  async validatePassword(password) {
+    return await bcrypt.compare(password, this.password);
+  }
+}
+
+User.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  username: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+}, {
+  sequelize,
+  modelName: 'User'
+});
+
+module.exports = User;

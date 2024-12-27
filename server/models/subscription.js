@@ -30,4 +30,4 @@ Subscription.init({
   modelName: 'Subscription'
 });
 
-module.exports = Subscription; 
+module.exports = Subscription;

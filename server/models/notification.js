@@ -1,31 +1,37 @@
-module.exports = (sequelize, DataTypes) => {
-  const Notification = sequelize.define('Notification', {
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    body: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    senderId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    receiverId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    read: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
-  });
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-  Notification.associate = (models) => {
-    Notification.belongsTo(models.User, { as: 'Sender', foreignKey: 'senderId' });
-    Notification.belongsTo(models.User, { as: 'Receiver', foreignKey: 'receiverId' });
-  };
+class Notification extends Model {}
 
-  return Notification;
-};
+Notification.init({
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  body: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  senderId: {
+    type: DataTypes.UUID,
+    allowNull: false
+  },
+  receiverId: {
+    type: DataTypes.UUID,
+    allowNull: false
+  },
+  read: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
+}, {
+  sequelize,
+  modelName: 'Notification'
+});
+
+module.exports = Notification;

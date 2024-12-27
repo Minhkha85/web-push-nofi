@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../auth/api";
+
 function NotificationTester({ token }) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
@@ -10,8 +11,10 @@ function NotificationTester({ token }) {
   });
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (token) {
+      fetchUsers();
+    }
+  }, [token]);
 
   const fetchUsers = async () => {
     try {
@@ -20,9 +23,15 @@ function NotificationTester({ token }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUsers(response.data);
+      if (Array.isArray(response.data)) {
+        setUsers(response.data);
+      } else {
+        console.error("Data từ API không phải là mảng:", response.data);
+        setUsers([]);
+      }
     } catch (error) {
       console.error("Error fetching users:", error);
+      setUsers([]);
     }
   };
 

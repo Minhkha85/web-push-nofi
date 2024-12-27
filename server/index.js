@@ -77,9 +77,9 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   try {
       const { username, password } = req.body;
-    //   console.log(username, password);
+      console.log(username, password);
     const user = await User.findOne({ where: { username } });
-    // console.log(user);
+    console.log('Found user:', user ? 'Yes' : 'No');
     if (!user || !(await user.validatePassword(password))) {
       return res.status(401).json({ message: 'Thông tin đăng nhập không chính xác' });
     }
@@ -120,7 +120,7 @@ app.post('/send-notification', authenticateToken, async (req, res) => {
   try {
     const { receiverId, title, body } = req.body;
     const senderId = req.user.id;
-
+    console.log(senderId, receiverId, title, body);
     // Lưu thông báo vào database
     await Notification.create({
       senderId,
@@ -174,5 +174,5 @@ app.get('/users', authenticateToken, async (req, res) => {
 
 // Khởi tạo database và khởi động server
 sequelize.sync().then(() => {
-  app.listen(5000,'0.0.0.0', () => console.log('Server running on port 5000'));
+  app.listen(5000, () => console.log('Server running on port 5000'));
 });
